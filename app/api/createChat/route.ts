@@ -4,8 +4,11 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
+
   const { pdfUrl, chatTitle } = await req.json();
   const { userId } = auth();
+
+
 
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -35,6 +38,7 @@ export async function POST(req: Request) {
         },
       },
     });
+
 
     return NextResponse.json({ pdf }, { status: 201 });
   } catch (error) {

@@ -29,7 +29,7 @@ const SideBar = () => {
         const fetchChats = async () => {
             try {
                 const response = await axios.get("/api/chat");
-                setChats(response.data); // Set chats from API response
+                setChats(response.data); 
             } catch (error) {
                 console.error("Error fetching chats:", error);
             }

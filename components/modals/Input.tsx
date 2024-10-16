@@ -5,7 +5,7 @@ import { BiDollar } from "react-icons/bi";
 
 interface FormData {
     pdf: File | null;
-    chatTitle: String;
+    chatTitle: string;
 }
 interface InputProps {
     id: keyof FormData;
