@@ -13,7 +13,7 @@ const ChatPage = () => {
 
     return (
         <div className="text-white flex flex-col items-center justify-center h-screen px-2">
-            <Image src='/bannerfinal.png' alt="logo" width={500} height={500} className="" />
+            {/* <Image src='/bannerfinal.png' alt="logo" width={500} height={500} className="" /> */}
             <div className="flex space-x-3 text-center">
                 <div>
                     <div className="flex flex-col items-center justify-center mb-5">
@@ -21,9 +21,9 @@ const ChatPage = () => {
                         <h2>Examples</h2>
                     </div>
                     <div className="space-y-2">
-                        <p className="infoText">&quot;Explain the concept of due process&quot;</p>
-                        <p className="infoText">&quot;What are the key differences between civil and criminal law?&quot;</p>
-                        <p className="infoText">&quot;What is the significance of the Miranda rights?&quot;</p>
+                        <p className="infoText">&quot;Upload a PDF to analyze job descriptions&quot;</p>
+                        <p className="infoText">&quot;Generate a personalized chat for resume analysis&quot;</p>
+                        <p className="infoText">&quot;Get AI-driven insights on your uploaded files&quot;</p>
                     </div>
                 </div>
                 <div>
@@ -32,9 +32,9 @@ const ChatPage = () => {
                         <h2>Capabilities</h2>
                     </div>
                     <div className="space-y-2">
-                        <p className="infoText">&quot;Provide detailed legal analysis&quot;</p>
-                        <p className="infoText">&quot;Summarize landmark Supreme Court cases&quot;</p>
-                        <p className="infoText">&quot;Assist with legal research and citations&quot;</p>
+                        <p className="infoText">&quot;Upload and analyze job descriptions from PDFs&quot;</p>
+                        <p className="infoText">&quot;Generate detailed summaries and feedback&quot;</p>
+                        <p className="infoText">&quot;Create interactive chats for resume improvement&quot;</p>
                     </div>
                 </div>
                 <div>
@@ -43,14 +43,13 @@ const ChatPage = () => {
                         <h2>Special Features</h2>
                     </div>
                     <div className="space-y-2">
-                        <p className="infoText">&quot;Advanced natural language understanding tailored for legal texts&quot;</p>
-                        <p className="infoText">&quot;Access to a vast database of legal precedents and statutes&quot;</p>
-                        <p className="infoText">&quot;Interactive tools for creating legal documents&quot;</p>
+                        <p className="infoText">&quot;Advanced AI tailored for analyzing resumes and job descriptions&quot;</p>
+                        <p className="infoText">&quot;Instant feedback on resumes with scoring based on skills, experience, and more&quot;</p>
+                        <p className="infoText">&quot;Interactive chat tool for career guidance and resume tips&quot;</p>
                     </div>
                 </div>
-
-
             </div>
+
         </div>
     );
 }

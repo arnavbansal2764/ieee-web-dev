@@ -59,7 +59,7 @@ const HeroContent = () => {
           variants={slideInFromLeft(0.8)}
           className="text-lg text-gray-400 my-5 max-w-[600px]"
         >
-          I&apos;m AIQueryHub, an advanced AI-powered legal assistant designed to revolutionize the way you approach legal tasks.
+          I&apos;m AIQueryHub, an advanced AI-powered assistant designed to revolutionize the way you approach pdf analysis tasks
         </motion.p>
         <motion.a
           onClick={() => router.push("/sign-up")}
@@ -74,12 +74,12 @@ const HeroContent = () => {
         variants={slideInFromRight(0.8)}
         className="w-full h-full flex justify-center items-center"
       >
-        <Image
+        {/* <Image
           src="/bannerfinal.png"
           alt="work icons"
           height={650}
           width={650}
-        />
+        /> */}
       </motion.div>
     </motion.div>
   );
