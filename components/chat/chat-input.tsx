@@ -2,6 +2,7 @@
 import { useSession } from "@clerk/nextjs";
 import { useState } from "react";
 import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 type Props = {
   pdfId: string;
@@ -11,7 +12,7 @@ const ChatInput = ({ pdfId }: Props) => {
   const { session } = useSession();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
@@ -19,24 +20,29 @@ const ChatInput = ({ pdfId }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!input.trim()) return; // Prevent sending empty messages
+    if (!input.trim()) return; 
 
     setLoading(true);
 
     try {
-      const response = await axios.post(`/api/${pdfId}/sendMessage`, {
+      const response = await axios.post('/api/messages', {
         pdfId,
         content: input,
+        sender : "User",
       });
 
       if (response.status === 201) {
-        console.log('Message sent:', response.data);
-        setInput(''); // Clear the input field
+        console.log('Message created successfully:', response.data.newMessage);
+      } else {
+        console.error('Failed to create message:', response.data.message);
       }
+     
     } catch (error) {
-      console.error(error);
-    } finally {
+      console.error('Error creating message:', error);
+    } finally{
       setLoading(false);
+      setInput('');
+      
     }
   };
 

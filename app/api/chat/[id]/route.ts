@@ -22,3 +22,25 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return NextResponse.json({ error: "Failed to delete chat." }, { status: 500 });
     }
 }
+
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+
+    const pdfId = params.id;
+
+    if (!pdfId) {
+        return NextResponse.json({ message: 'Missing pdfId' }, { status: 400 });
+    }
+
+    try {
+        const messages = await db.message.findMany({
+            where: { pdfId },
+            orderBy: { createdAt: 'asc' }, 
+        });
+
+        return NextResponse.json(messages, { status: 200 });
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    }
+}

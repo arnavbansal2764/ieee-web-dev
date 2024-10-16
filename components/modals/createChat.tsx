@@ -58,6 +58,7 @@ const CreateChatModal = () => {
             const newPdf = response.data;
             toast.success("PDF uploaded and chat created!");
             router.push(`/chat/${newPdf.id}`);
+            router.refresh();
             reset(); // Reset the form after successful submission
             newChat.onClose();
         } catch (error) {
