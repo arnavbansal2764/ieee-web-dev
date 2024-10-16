@@ -1,0 +1,39 @@
+// schema.prisma
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String     @id @default(uuid()) @map("_id")
+  userId     String    @unique
+  name       String
+  pdfs       PDF[]
+  createdAt  DateTime  @default(now()) @map("createdAt")
+  updatedAt  DateTime  @updatedAt @map("updatedAt")
+}
+
+model PDF {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  pdfUrl     String
+  embeddings String[]
+  messages   Message[]
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    
+  createdAt  DateTime  @default(now()) @map("createdAt")
+  updatedAt  DateTime  @updatedAt @map("updatedAt")
+}
+
+model Message {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  sender     String    // "user" or "ai" to identify the sender
+  pdf        PDF       @relation(fields: [pdfId], references: [id])
+  pdfId      String    @db.ObjectId
+  createdAt  DateTime  @default(now()) @map("createdAt")
+}
