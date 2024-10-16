@@ -3,7 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
-    const { pdfUrl, chatTitle } = await req.json();
+    const { pdfUrl, name } = await req.json();
     const { userId } = auth();
 
     if (!userId) {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
             data: {
                 pdfUrl: pdfUrl,
                 userId: userId, 
-                name : chatTitle
+                name : name
             },
         });
 
