@@ -47,7 +47,7 @@ const Navbar = () => {
                             <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
                             <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
                             <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
-                            <span className="relative">Chat</span>
+                            <span className="relative">Get Started</span>
 
                         </a>
                         <a onClick={() => router.push("/pricing")} className="cursor-pointer relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-r-full shadow-2xl group">
