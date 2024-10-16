@@ -5,9 +5,15 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import useCreateChat from "@/hooks/useCreateChat";
 import Modal from "./modal";
+import { UploadButton } from "@/lib/uploadThing/uploadThing";
+import { useAuth, useSession } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import Heading from "./ModalInputs/Heading";
+import Input from "./Input";
 
 interface FormData {
-    resume: File | null;
+    pdf: File | null;
+    chatTitle : String;
 }
 
 
@@ -19,24 +25,48 @@ const CreateChatModal = () => {
         reset,
     } = useForm<FormData>({
         defaultValues: {
-            resume: null,
+            chatTitle:"",
+            pdf: null,
         },
     });
 
     const newChat = useCreateChat();
     const [isLoading, setIsLoading] = useState(false);
-    const [resume, setResume] = useState<File | null>(null);
+    const [pdfName, setPdfName] = useState<string | null>(null);
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [chatTitle,setChatTitle] = useState("");
+    const {userId} = useAuth();
+    const router = useRouter();
     const onBack = () => {
         newChat.onClose();
     };
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = async () => {
+        if (!pdfUrl) {
+            toast.error("Please upload a PDF before creating the chat.");
+            return;
+        }
 
         setIsLoading(true);
-        const profileData = {
-            resume: resume,
-        };
-        console.log(profileData);
+        try {
+            const response = await axios.post("/api/createChat", {
+                pdfUrl: pdfUrl,
+                name : chatTitle
+            });
+
+            const newPdf = response.data; 
+            console.log(newPdf);
+            toast.success("PDF uploaded and chat created!");           
+            router.push(`/chat/${newPdf.id}`); 
+            reset(); 
+            newChat.onClose(); 
+        } catch (error) {
+            console.error(error);
+            toast.error("Error creating chat. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
+
 
     const actionLabel = useMemo(() => {
        return "Create";
@@ -47,6 +77,7 @@ const CreateChatModal = () => {
     }, []);
 
     let bodyContent = (
+        <div>
         <div className="file_upload p-5 border-4 border-dotted border-gray-300 rounded-lg">
             <svg
                 className="text-indigo-500 w-16 h-16 mx-auto mb-4"
@@ -64,19 +95,43 @@ const CreateChatModal = () => {
             </svg>
             <div className="input_field flex flex-col items-center">
                 <label>
-                    <input
-                        className="text-sm cursor-pointer w-36 hidden"
-                        type="file"
-                        onChange={(e) =>
-                            setResume(e.target.files ? e.target.files[0] : null)
-                        }
+                    <UploadButton
+                        endpoint="pdfFile"
+                        onUploadBegin={() => {
+                            setIsLoading(true);
+                        }}
+                        onClientUploadComplete={(res) => {
+                            setPdfUrl(res[0].url);
+                            setPdfName(res[0].name);
+                            console.log("Files: ", res);
+                            setIsLoading(false);
+                        }}
+                        onUploadError={(error: Error) => {
+                            setIsLoading(false);
+                            alert(`ERROR! ${error.message}`);
+                        }}
                     />
-                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-2 px-4 hover:bg-indigo-500">
-                        Select File
-                    </div>
+                    {!pdfName ? (
+                        <div>{isLoading ? <div>"Uploading"</div> : <div></div>}</div>
+                    ) : (
+                        <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-2 px-4 hover:bg-indigo-500">
+                            Selected File : <span className="text-white">{pdfName}</span>
+                        </div>
+                    )}
                 </label>
             </div>
         </div>
+            <Heading title="Chat Title" />
+            <Input
+                id="chatTitle"
+                label="Your chat title"
+                disabled={isLoading}
+                register={register}
+                errors={errors}
+                required
+            />
+            </div>
+
     );
 
 

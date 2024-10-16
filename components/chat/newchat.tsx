@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 const NewChat = () => {
     const router = useRouter();
-    const { session } = useSession();
     const newChat = useCreateChat();
     const createNewChat = async () => {
         newChat.onOpen();

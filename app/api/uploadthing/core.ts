@@ -7,7 +7,7 @@ const f = createUploadthing();
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  resume: f({
+  pdfFile: f({
     pdf: { maxFileSize: "4MB", maxFileCount: 1, minFileCount: 1 },
   })
     .middleware(async ({ req, res }) => {

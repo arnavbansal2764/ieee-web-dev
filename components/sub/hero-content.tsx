@@ -59,7 +59,7 @@ const HeroContent = () => {
           variants={slideInFromLeft(0.8)}
           className="text-lg text-gray-400 my-5 max-w-[600px]"
         >
-          I&apos;m LawGPT, an advanced AI-powered legal assistant designed to revolutionize the way you approach legal tasks.
+          I&apos;m AIQueryHub, an advanced AI-powered legal assistant designed to revolutionize the way you approach legal tasks.
         </motion.p>
         <motion.a
           onClick={() => router.push("/sign-up")}

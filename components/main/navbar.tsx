@@ -23,7 +23,7 @@ const Navbar = () => {
           /> */}
 
                     <span onClick={() => router.push("/")} className="font-bold ml-[10px] hidden md:block text-gray-300">
-                        LawGPT
+                        AIQueryHub
                     </span>
                 </a>
                 <div className="w-auto h-full flex flex-row items-center justify-between md:mr-20">

@@ -5,7 +5,7 @@ import "./globals.css";
 import CreateChatModal from "@/components/modals/createChat";
 const font = Urbanist({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "LawGPT",
+  title: "AIQueryHub",
   description: "Your AI law assistant",
 };
 export default function RootLayout({
