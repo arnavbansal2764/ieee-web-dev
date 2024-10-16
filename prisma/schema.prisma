@@ -22,12 +22,13 @@ model PDF {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   pdfUrl     String
-  messages   Message[]
+  messages   Message[] 
   user       User      @relation(fields: [userId], references: [id])
   userId     String
   createdAt  DateTime  @default(now()) @map("createdAt")
   updatedAt  DateTime  @updatedAt @map("updatedAt")
-  embeds     Embed[]
+  text String
+  image_text String
 }
 
 model Message {
@@ -39,10 +40,5 @@ model Message {
   createdAt DateTime @default(now()) @map("createdAt")
 }
 
-model Embed {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  pdfId     String   @db.ObjectId
-  embeds    Float[]
-  pdf       PDF      @relation(fields: [pdfId], references: [id])
-}
+
 

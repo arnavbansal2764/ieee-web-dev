@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { pdfUrl, chatTitle } = await req.json();
+  const { pdfId, userQuery } = await req.json();
   const { userId } = auth();
 
   if (!userId) {
@@ -12,7 +12,21 @@ export async function POST(req: Request) {
   }
 
   try {
-    const flaskResponse = await axios.post("url_flask", { pdfUrl });
+    const pdf = await db.pDF.findUnique({
+      where: { id: pdfId },
+      include: { messages: true },
+    });
+
+    if (!pdf) {
+      return NextResponse.json({ message: "PDF not found" }, { status: 404 });
+    }
+
+    const flaskResponse = await axios.post("flask_url", {
+      text: pdf.text,
+      image_text: pdf.image_text,
+      messages: pdf.messages,
+      userQuery: userQuery,
+    });
 
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
@@ -20,23 +34,7 @@ export async function POST(req: Request) {
 
     const { data } = flaskResponse;
 
-    const pdf = await db.pDF.create({
-      data: {
-        name: chatTitle,
-        pdfUrl: pdfUrl,
-        userId: userId,
-        text: data.text,
-        image_text: data.image_text,
-        messages: {
-          create: data.messages.map((message: any) => ({
-            content: message.content,
-            sender: message.sender,
-          })),
-        },
-      },
-    });
-
-    return NextResponse.json({ pdf }, { status: 201 });
+    return NextResponse.json({ response: data }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
