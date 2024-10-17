@@ -72,8 +72,14 @@ export const Skill_data = [
   
   export const Backend_skill = [
     {
-      skill_name: "Fire base",
-      Image: "/Firebase.png",
+      skill_name: "Mongo Db",
+      Image: "/mongodb.png",
+      width: 55,
+      height: 55,
+    },
+    {
+      skill_name: "Prisma",
+      Image: "/prisma.webp",
       width: 55,
       height: 55,
     }
