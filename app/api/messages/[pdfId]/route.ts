@@ -28,9 +28,9 @@ export async function GET(
       return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
 
-    // Return the messages
+    // Return the messages and fiveQues
     return NextResponse.json(
-      { messages: pdfWithMessages.messages },
+      { messages: pdfWithMessages.messages, fiveQues: pdfWithMessages.fiveQues },
       { status: 200 }
     );
   } catch (error) {

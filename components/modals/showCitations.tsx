@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import Modal from "./modal";
 import Heading from "./ModalInputs/Heading";
 import useCitations from "@/hooks/useCitations";
@@ -17,6 +17,11 @@ const ShowCitations = () => {
   let bodyContent = (
     <div>
       <Heading title="Citations here" />
+      {citation.citations.map((cite, index) => (
+        <div key={index} className="p-2 border-b">
+          {JSON.stringify(cite)}
+        </div>
+      ))}
     </div>
   );
 
