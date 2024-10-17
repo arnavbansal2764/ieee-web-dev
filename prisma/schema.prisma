@@ -28,7 +28,7 @@ model PDF {
   createdAt  DateTime  @default(now()) @map("createdAt")
   updatedAt  DateTime  @updatedAt @map("updatedAt")
   text String
-  image_text String
+  image_text String[]
 }
 
 model Message {

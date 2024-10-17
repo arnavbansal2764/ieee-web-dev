@@ -52,17 +52,18 @@ const CreateChatModal = () => {
         try {
             const response = await axios.post("/api/createChat", {
                 pdfUrl: pdfUrl,
-                name: data.chatTitle // Using data from react-hook-form
+                chatTitle: data.chatTitle // Using data from react-hook-form
             });
-
+            
             const newPdf = response.data;
+            console.log("*\n*\n*\n*\n*\n",newPdf)
             toast.success("PDF uploaded and chat created!");
             router.push(`/chat/${newPdf.id}`);
             router.refresh();
             reset(); // Reset the form after successful submission
             newChat.onClose();
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             toast.error("Error creating chat. Please try again.");
         } finally {
             setIsLoading(false);
@@ -106,7 +107,7 @@ const CreateChatModal = () => {
                             onClientUploadComplete={(res) => {
                                 setPdfUrl(res[0].url);
                                 setPdfName(res[0].name);
-                                console.log("Files: ", res);
+                                console.log("\n\n\n\n\n\n\n\n\Files: ", res[0].url,"\n\n\n\n\n");
                                 setIsLoading(false);
                             }}
                             onUploadError={(error: Error) => {

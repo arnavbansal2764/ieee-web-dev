@@ -4,41 +4,31 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-
   const { pdfUrl, chatTitle } = await req.json();
   const { userId } = auth();
-
-
-
+  console.log("/in backend : pdfUrl: ", pdfUrl, " chatTitle: ", chatTitle);
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-
   try {
-    const flaskResponse = await axios.post("url_flask", { pdfUrl });
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/initial", { pdf_url: pdfUrl });
 
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
     }
 
-    const { data } = flaskResponse;
+    const { text, images } = flaskResponse.data;
+    
 
     const pdf = await db.pDF.create({
       data: {
         name: chatTitle,
         pdfUrl: pdfUrl,
         userId: userId,
-        text: data.text,
-        image_text: data.image_text,
-        messages: {
-          create: data.messages.map((message: any) => ({
-            content: message.content,
-            sender: message.sender,
-          })),
-        },
+        text: text,
+        image_text: images,
       },
     });
-
 
     return NextResponse.json({ pdf }, { status: 201 });
   } catch (error) {

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { pdfId, userQuery } = await req.json();
+  const { pdfId, content } = await req.json();
   const { userId } = auth();
 
   if (!userId) {
@@ -21,11 +21,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
 
-    const flaskResponse = await axios.post("flask_url", {
+    const flaskResponse = await axios.post("http://127.0.0.1:5000", {
+      //@ts-ignore
       text: pdf.text,
+      //@ts-ignore
       image_text: pdf.image_text,
       messages: pdf.messages,
-      userQuery: userQuery,
+      content: content,
     });
 
     if (flaskResponse.status !== 200) {
