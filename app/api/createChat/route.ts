@@ -4,18 +4,21 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-
-  const { pdfUrl, chatTitle } = await req.json();
+  const { pdfUrl, name } = await req.json();
+  if (!pdfUrl) {
+    return NextResponse.json({ message: "NO URL" }, { status: 404 });
+  }
+  console.log("URL: ", pdfUrl);
   const { userId } = auth();
-
-
 
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const flaskResponse = await axios.post("url_flask", { pdfUrl });
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/initial", {
+      pdfUrl,
+    });
 
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
@@ -25,21 +28,31 @@ export async function POST(req: Request) {
 
     const pdf = await db.pDF.create({
       data: {
-        name: chatTitle,
+        name: name, // Ensure chatTitle is correctly passed here
         pdfUrl: pdfUrl,
         userId: userId,
-        text: data.text,
         image_text: data.image_text,
-        messages: {
-          create: data.messages.map((message: any) => ({
-            content: message.content,
-            sender: message.sender,
-          })),
+      },
+    });
+    for (const t of data.text) {
+      await db.text.create({
+        data: {
+          arrayData: t,
+          pdfId: pdf.id,
+        },
+      });
+    }
+    await db.message.create({
+      data: {
+        content: "You are a helpful chatbot",
+        role: "system",
+        pdf: {
+          connect: {
+            id: pdf.id,
+          },
         },
       },
     });
-
-
     return NextResponse.json({ pdf }, { status: 201 });
   } catch (error) {
     console.error(error);

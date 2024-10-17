@@ -1,48 +1,77 @@
-import { db } from '@/lib/db';
-import { NextResponse } from 'next/server';
-
-type RequestBody = {
-    pdfId: string;
-    content: string;
-    sender: string;
-};
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
+import axios from "axios";
 
 export async function POST(req: Request) {
-    try {
-        const { pdfId, content, sender }: RequestBody = await req.json();
+  const { pdfId, content, sender } = await req.json();
+  const { userId } = auth();
 
-        // Validate the incoming request
-        if (!pdfId || !content || !sender) {
-            return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
-        }
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
-        // Check if the PDF exists
-        const pdf = await db.pDF.findUnique({
-            where: {
-                id: pdfId,
-            },
-        });
+  try {
+    const pdf = await db.pDF.findUnique({
+      where: { id: pdfId },
+      include: {
+        messages: {
+          select: {
+            content: true,
+            role: true,
+          },
+        },
+      },
+    });
 
-        if (!pdf) {
-            return NextResponse.json({ message: 'PDF not found' }, { status: 404 });
-        }
-
-        // Create the new message and link it to the PDF
-        const newMessage = await db.message.create({
-            data: {
-                content,
-                sender,
-                pdf: {
-                    connect: {
-                        id: pdfId,
-                    },
-                },
-            },
-        });
-
-        return NextResponse.json({ message: 'Message created successfully', newMessage }, { status: 201 });
-    } catch (error) {
-        console.error('Error creating message:', error);
-        return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    if (!pdf) {
+      return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
+    const textDB = await db.text.findMany({ where: { pdfId: pdfId } });
+    const text = [];
+    for (const t of textDB) {
+      text.push(t.arrayData);
+    }
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/message", {
+      text: text,
+      image_text: pdf.image_text,
+      messages: pdf.messages,
+      userQuery: content,
+    });
+    const { data } = flaskResponse;
+    console.log("data is ", data);
+    const senderMessage = await db.message.create({
+      data: {
+        content,
+        role: "user",
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
+    const AIMessage = await db.message.create({
+      data: {
+        content: flaskResponse.data.message,
+        role: "assistant",
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
+    if (flaskResponse.status !== 200) {
+      return NextResponse.json({ message: "AI server error" }, { status: 501 });
+    }
+
+    return NextResponse.json({ response: data }, { status: 200 });
+  } catch (error) {
+    //console.error(error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
