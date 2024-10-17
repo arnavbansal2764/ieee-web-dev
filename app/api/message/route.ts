@@ -75,23 +75,21 @@ export async function POST(req: Request) {
         },
       },
     });
+    const temp = flaskResponse.data.metadata[0];
+    console.log("Metadata: ", temp);
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
     }
 
-    const { data } = flaskResponse;
-    const newMessage2 = await db.message.create({
-      data: {
-        content: data.text,
-        role: "assistant",
-        pdf: {
-          connect: {
-            id: pdfId,
-          },
-        },
+    console.log("metadata: ", flaskResponse.data.metadata[0]);
+
+    return NextResponse.json(
+      {
+        message: flaskResponse.data.message,
+        metadata: flaskResponse.data.metadata,
       },
-    });
-    return NextResponse.json({ response: data }, { status: 200 });
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -39,6 +39,7 @@ model Message {
   pdf       PDF      @relation(fields: [pdfId], references: [id])
   pdfId     String   @db.ObjectId
   createdAt DateTime @default(now()) @map("createdAt")
+  citations Json[] @default([])
 }
 
 model Text {
