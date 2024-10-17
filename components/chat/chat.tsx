@@ -1,12 +1,12 @@
-'use client';
+"use client";
 import { useSession } from "@clerk/nextjs";
 import { useState, useEffect, useRef } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 type Message = {
   id: string;
   content: string;
-  sender: string;
+  role: string;
   createdAt: string;
 };
 
@@ -25,18 +25,18 @@ function Chat({ chatId }: Props) {
       const response = await axios.get(`/api/messages/${pdfId}`);
 
       if (response.status === 200) {
-        console.log('Messages:', response.data.messages);
+        console.log("Messages:", response.data.messages);
         setMessages(response.data.messages);
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error("Error fetching messages:", error);
     }
   }
 
   // Scroll to the bottom of the message list
   const scrollToBottom = () => {
     if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -53,7 +53,7 @@ function Chat({ chatId }: Props) {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden p-10">
       {messages.length === 0 ? (
         <>
           <p className="mt-10 text-center text-white">
@@ -75,22 +75,39 @@ function Chat({ chatId }: Props) {
           </svg>
         </>
       ) : (
-          messages.map((message) => (
-            message.sender !== "system" && (
+        messages.map(
+          (message) =>
+            message.role !== "system" && (
               <div
-                key={message.id}
-                className={`p-3 mb-4 max-w-lg rounded-xl ${message.sender === "user"
-                    ? "bg-blue-500 text-white self-end ml-auto" // Align user messages to the right
-                    : "bg-gray-800 text-gray-200 self-start mr-auto" // Align assistant messages to the left
-                  }`}
+                className={`flex ${
+                  message.role === "user" ? "justify-end" : "justify-start"
+                }`}
               >
-                <p className="text-xs font-semibold text-gray-300 mb-1">
-                  {message.sender}
-                </p>
-                <p className="text-sm">{message.content}</p>
+                {message.role === "user" && (
+                  <div
+                    key={message.id}
+                    className={`p-3 mb-4 max-w-lg rounded-xl bg-blue-500 text-white self-end`}
+                  >
+                    <p className="text-xs font-semibold text-gray-300 mb-1">
+                      {message.role}
+                    </p>
+                    <p className="text-sm">{message.content}</p>
+                  </div>
+                )}
+                {message.role != "user" && (
+                  <div
+                    key={message.id}
+                    className={`p-3 mb-4 max-w-lg rounded-xl bg-gray-800 text-gray-200`}
+                  >
+                    <p className="text-xs font-semibold text-gray-300 mb-1">
+                      {message.role}
+                    </p>
+                    <p className="text-sm">{message.content}</p>
+                  </div>
+                )}
               </div>
             )
-          ))
+        )
       )}
       <div ref={messageEndRef} />
     </div>
