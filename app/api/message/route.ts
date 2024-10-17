@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
- const { pdfId, content, sender } = await req.json();
+  const { pdfId, content, sender } = await req.json();
   const { userId } = auth();
 
   if (!userId) {
@@ -24,12 +24,12 @@ export async function POST(req: Request) {
       },
     });
     if (!pdf) {
-      return NextResponse.json({ message: 'PDF not found' }, { status: 404 });
+      return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
     const newMessage = await db.message.create({
       data: {
         content,
-        sender,
+        role: sender,
         pdf: {
           connect: {
             id: pdfId,
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     const senderMessage = await db.message.create({
       data: {
         content,
-        role: "User",
+        role: "user",
         pdf: {
           connect: {
             id: pdfId,
@@ -67,14 +67,13 @@ export async function POST(req: Request) {
     const AIMessage = await db.message.create({
       data: {
         content: flaskResponse.data.message,
-        role: "AI",
+        role: "assistant",
         pdf: {
           connect: {
             id: pdfId,
           },
         },
       },
-
     });
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
@@ -83,8 +82,8 @@ export async function POST(req: Request) {
     const { data } = flaskResponse;
     const newMessage2 = await db.message.create({
       data: {
-        content : data.text,
-        sender : "AI",
+        content: data.text,
+        role: "assistant",
         pdf: {
           connect: {
             id: pdfId,
