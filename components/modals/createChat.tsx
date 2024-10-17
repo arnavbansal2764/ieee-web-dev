@@ -80,9 +80,9 @@ const CreateChatModal = () => {
 
   let bodyContent = (
     <div>
-      <div className="file_upload p-5 border-4 border-dotted border-gray-300 rounded-lg">
+      <div className="file_upload p-5 border-4 border-dotted border-gray-600 rounded-lg bg-gray-800 text-white mb-10">
         <svg
-          className="text-indigo-500 w-16 h-16 mx-auto mb-4"
+          className="text-indigo-400 w-16 h-16 mx-auto mb-4"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -114,10 +114,19 @@ const CreateChatModal = () => {
               }}
             />
             {!pdfName ? (
-              <div>{isLoading ? <div>"Uploading"</div> : <div></div>}</div>
+              <div>
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12 mb-4"></div>
+                    <div className="ml-2 text-indigo-400">Uploading...</div>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             ) : (
-              <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-2 px-4 hover:bg-indigo-500">
-                Selected File : <span className="text-white">{pdfName}</span>
+              <div className="text bg-indigo-600 text-white border border-gray-500 rounded font-semibold cursor-pointer p-2 px-4 hover:bg-indigo-500">
+                Selected File: <span className="text-white">{pdfName}</span>
               </div>
             )}
           </label>
@@ -129,11 +138,12 @@ const CreateChatModal = () => {
         id="chatTitle"
         label="Your chat title"
         disabled={isLoading}
-        register={register} // This connects the input with react-hook-form
+        register={register}
         errors={errors}
         required
       />
     </div>
+
   );
 
   return (
