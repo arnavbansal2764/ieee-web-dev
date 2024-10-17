@@ -2,6 +2,8 @@
 
 AIQueryHub is an AI-powered law assistant designed to help users with legal queries by analyzing PDF documents and providing relevant information.
 
+
+### Link to flask backend : https://github.com/Dushyantbha012/ieee-flask
 ## Table of Contents
 
 - [Installation](#installation)
