@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     const { id } = params;
-    const { userId } = auth(); // Use Clerk to get the current user's ID
+    const { userId } = auth(); 
 
     if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

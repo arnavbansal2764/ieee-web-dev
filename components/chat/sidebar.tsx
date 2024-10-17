@@ -37,7 +37,7 @@ const SideBar = () => {
     fetchChats();
   }, []); // Empty dependency array to run only on component mount
   const handleChatDeleted = (id: string) => {
-    setChats((prevChats) => prevChats.filter((chat) => chat.id !== id)); // Update state to remove the deleted chat
+    setChats((prevChats) => prevChats.filter((chat) => chat.id !== id));
   };
   return (
     <div className="p-2 flex flex-col h-screen ">

@@ -25,7 +25,6 @@ const ChatRow = ({ id, onChatDeleted, name }: Props) => {
     }, [pathname, id]);
 
     const handleDelete = async (e: React.MouseEvent<SVGSVGElement>) => {
-        e.stopPropagation(); 
         try {
             await axios.delete(`/api/chat/${id}`); 
             onChatDeleted(id); 
