@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { pdfId, content, sender } = await req.json();
+ const { pdfId, content, sender } = await req.json();
   const { userId } = auth();
 
   if (!userId) {
@@ -23,10 +23,24 @@ export async function POST(req: Request) {
         },
       },
     });
-
+    if (!pdf) {
+      return NextResponse.json({ message: 'PDF not found' }, { status: 404 });
+    }
+    const newMessage = await db.message.create({
+      data: {
+        content,
+        sender,
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
     if (!pdf) {
       return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
+
     const textDB = await db.text.findMany({ where: { pdfId: pdfId } });
     const text = [];
     for (const t of textDB) {
@@ -60,13 +74,24 @@ export async function POST(req: Request) {
           },
         },
       },
+
     });
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });
     }
 
     const { data } = flaskResponse;
-
+    const newMessage2 = await db.message.create({
+      data: {
+        content : data.text,
+        sender : "AI",
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
     return NextResponse.json({ response: data }, { status: 200 });
   } catch (error) {
     console.error(error);

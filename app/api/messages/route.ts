@@ -4,8 +4,11 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
+
   const { pdfId, content, sender } = await req.json();
   const { userId } = auth();
+
+
 
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -23,6 +26,7 @@ export async function POST(req: Request) {
         },
       },
     });
+
 
     if (!pdf) {
       return NextResponse.json({ message: "PDF not found" }, { status: 404 });
