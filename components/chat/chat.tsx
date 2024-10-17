@@ -2,6 +2,7 @@
 import { useSession } from "@clerk/nextjs";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import useCitations from "@/hooks/useCitations";
 
 type Message = {
   id: string;
@@ -18,7 +19,7 @@ function Chat({ chatId }: Props) {
   const { session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const messageEndRef = useRef<null | HTMLDivElement>(null);
-
+  const citation = useCitations();
   // Fetch messages for the given chatId (pdfId) on component mount
   async function fetchMessages(pdfId: string) {
     try {
@@ -51,28 +52,32 @@ function Chat({ chatId }: Props) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
+  const questions = [
+    { title: "Question 1", info: "This is some info about Question 1." },
+    { title: "Question 2", info: "This is some info about Question 2." },
+    { title: "Question 3", info: "This is some info about Question 3." },
+    { title: "Question 4", info: "This is some info about Question 4." },
+    { title: "Question 5", info: "This is some info about Question 5." },
+  ];
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden p-10">
       {messages.length === 0 ? (
         <>
-          <p className="mt-10 text-center text-white">
-            Type a prompt in below to get started
-          </p>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-10 h-10 mx-auto mt-5 text-white animate-bounce"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <div className="flex justify-between space-x-4 p-4">
+            {questions.map((question, index) => (
+              <div
+                key={index}
+                className="relative group bg-gray-500 text-white p-6 rounded-lg text-center flex-1"
+              >
+                {question.title}
+
+                {/* Tooltip for additional information */}
+                <div className="absolute left-0 top-full mt-2 w-full bg-white text-gray-800 p-4 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-y-2">
+                  {question.info}
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       ) : (
         messages.map(
@@ -103,6 +108,12 @@ function Chat({ chatId }: Props) {
                       {message.role}
                     </p>
                     <p className="text-sm">{message.content}</p>
+                    <button
+                      className="px-4 mt-4 py-2 bg-indigo-400 rounded-full "
+                      onClick={() => citation.onOpen()}
+                    >
+                      Citations
+                    </button>
                   </div>
                 )}
               </div>
