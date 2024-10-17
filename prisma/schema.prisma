@@ -29,6 +29,7 @@ model PDF {
   updatedAt  DateTime  @updatedAt @map("updatedAt")
   image_text String[] @default([])
   Text Text[]
+  fiveQues String[]
 }
 
 model Message {
