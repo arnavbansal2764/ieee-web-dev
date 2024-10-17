@@ -76,17 +76,20 @@ function Chat({ chatId }: Props) {
         </>
       ) : (
         messages.map((message) => (
-          <div
-            key={message.id}
-            className={`p-3 mb-4 max-w-lg rounded-xl ${message.sender === "user"
+          message.sender !== "system" && (
+            <div
+              key={message.id}
+              className={`p-3 mb-4 max-w-lg rounded-xl ${message.sender === "user"
                 ? "bg-blue-500 text-white self-end"
                 : "bg-gray-800 text-gray-200"
-              }`}
-          >
-            <p className="text-xs font-medium text-gray-300 mb-1">{message.sender}</p>
-            <p className="text-sm">{message.content}</p>
-          </div>
-
+                }`}
+            >
+              <p className="text-xs font-semibold text-gray-300 mb-1">
+                {message.sender}
+              </p>
+              <p className="text-sm">{message.content}</p>
+            </div>
+          )
         ))
       )}
       <div ref={messageEndRef} />
