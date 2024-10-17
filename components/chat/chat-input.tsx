@@ -25,7 +25,7 @@ const ChatInput = ({ pdfId }: Props) => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/messages', {
+      const response = await axios.post('/api/message', {
         pdfId,
         content: input,
         sender : "User",

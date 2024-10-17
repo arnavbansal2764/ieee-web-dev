@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const flaskResponse = await axios.post("url_flask", { pdfUrl });
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/initial", { pdfUrl });
 
     if (flaskResponse.status !== 200) {
       return NextResponse.json({ message: "AI server error" }, { status: 501 });

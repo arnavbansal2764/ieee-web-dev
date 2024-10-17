@@ -6,12 +6,10 @@ export async function GET(req: Request, { params }: { params: { pdfId: string } 
     try {
         const { pdfId } = params;
 
-        // Validate that pdfId is provided
         if (!pdfId) {
             return NextResponse.json({ message: 'PDF ID is required' }, { status: 400 });
         }
 
-        // Fetch the PDF and include its messages
         const pdfWithMessages = await db.pDF.findUnique({
             where: { id: pdfId },
             include: {

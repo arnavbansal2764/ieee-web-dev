@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { pdfId, userQuery } = await req.json();
+  const { pdfId, content,sender } = await req.json();
   const { userId } = auth();
 
   if (!userId) {
@@ -16,16 +16,29 @@ export async function POST(req: Request) {
       where: { id: pdfId },
       include: { messages: true },
     });
-
+    if (!pdf) {
+      return NextResponse.json({ message: 'PDF not found' }, { status: 404 });
+    }
+    const newMessage = await db.message.create({
+      data: {
+        content,
+        sender,
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
     if (!pdf) {
       return NextResponse.json({ message: "PDF not found" }, { status: 404 });
     }
 
-    const flaskResponse = await axios.post("flask_url", {
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/message", {
       text: pdf.text,
       image_text: pdf.image_text,
       messages: pdf.messages,
-      userQuery: userQuery,
+      userQuery: content,
     });
 
     if (flaskResponse.status !== 200) {
@@ -33,7 +46,17 @@ export async function POST(req: Request) {
     }
 
     const { data } = flaskResponse;
-
+    const newMessage2 = await db.message.create({
+      data: {
+        content : data.text,
+        sender : "AI",
+        pdf: {
+          connect: {
+            id: pdfId,
+          },
+        },
+      },
+    });
     return NextResponse.json({ response: data }, { status: 200 });
   } catch (error) {
     console.error(error);
