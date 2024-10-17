@@ -29,6 +29,7 @@ model PDF {
   updatedAt  DateTime  @updatedAt @map("updatedAt")
   image_text String[] @default([])
   Text Text[]
+  fiveQues String[]
 }
 
 model Message {
@@ -38,6 +39,7 @@ model Message {
   pdf       PDF      @relation(fields: [pdfId], references: [id])
   pdfId     String   @db.ObjectId
   createdAt DateTime @default(now()) @map("createdAt")
+  citations Json[] @default([])
 }
 
 model Text {

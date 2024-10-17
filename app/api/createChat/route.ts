@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   }
 
   try {
- const flaskResponse = await axios.post("http://127.0.0.1:5000/initial", {
+    const flaskResponse = await axios.post("http://127.0.0.1:5000/initial", {
       pdfUrl,
     });
 
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
         pdfUrl: pdfUrl,
         userId: userId,
         image_text: data.image_text,
+        fiveQues: data.ques,
       },
     });
     for (const t of data.text) {

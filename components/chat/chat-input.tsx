@@ -1,7 +1,7 @@
-'use client';
+"use client";
 import { useSession } from "@clerk/nextjs";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 const ChatInput = ({ pdfId }: Props) => {
   const { session } = useSession();
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,29 +20,27 @@ const ChatInput = ({ pdfId }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!input.trim()) return; 
+    if (!input.trim()) return;
 
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/message', {
+      const response = await axios.post("/api/messages", {
         pdfId,
         content: input,
-        sender : "User",
+        sender: "user",
       });
 
       if (response.status === 201) {
-        console.log('Message created successfully:', response.data.newMessage);
+        console.log("Message created successfully:", response.data.newMessage);
       } else {
-        console.error('Failed to create message:', response.data.message);
+        console.error("Failed to create message:", response.data.message);
       }
-     
     } catch (error) {
-      console.error('Error creating message:', error);
-    } finally{
+      console.error("Error creating message:", error);
+    } finally {
       setLoading(false);
-      setInput('');
-      
+      setInput("");
     }
   };
 
@@ -55,7 +53,9 @@ const ChatInput = ({ pdfId }: Props) => {
           value={input}
           onChange={handleInputChange}
           disabled={!session}
-          className={`bg-transparent focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300 ${loading && "animate-pulse"}`}
+          className={`bg-transparent focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300 ${
+            loading && "animate-pulse"
+          }`}
         />
         <button
           type="submit"
@@ -78,12 +78,12 @@ const ChatInput = ({ pdfId }: Props) => {
               />
             </svg>
           ) : (
-            'Send'
+            "Send"
           )}
         </button>
       </form>
     </div>
   );
-}
+};
 
 export default ChatInput;

@@ -1,15 +1,7 @@
 "use client";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import React, { useState, useMemo } from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
-import useCreateChat from "@/hooks/useCreateChat";
 import Modal from "./modal";
-import { UploadButton } from "@/lib/uploadThing/uploadThing";
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import Heading from "./ModalInputs/Heading";
-import Input from "./Input";
 import useCitations from "@/hooks/useCitations";
 
 const ShowCitations = () => {

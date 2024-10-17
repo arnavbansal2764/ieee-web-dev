@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       userQuery: content,
     });
     const { data } = flaskResponse;
-    console.log("data is ", data);
+
     const senderMessage = await db.message.create({
       data: {
         content,
@@ -60,6 +60,7 @@ export async function POST(req: Request) {
             id: pdfId,
           },
         },
+        citations: flaskResponse.data.metadata[0],
       },
     });
     if (flaskResponse.status !== 200) {
